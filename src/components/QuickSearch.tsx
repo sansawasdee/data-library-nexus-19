@@ -10,8 +10,8 @@ const QuickSearch = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const popularTags = [
-    'สถิติประชากร', 'งบประมาณ', 'สุขภาพ', 'การศึกษา', 
-    'คมนาคม', 'สิ่งแวดล้อม', 'ภาษี', 'การเงิน'
+    'DMFT', 'ร้านยา', 'KPI', 'UC', 'รายงาน 506', 
+    'แพทย์แผนไทย', 'บุคลากร', 'สิ่งแวดล้อม', 'NCD', 'HDC'
   ];
 
   const handleSearch = async () => {
@@ -40,7 +40,7 @@ const QuickSearch = () => {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
               type="text"
-              placeholder="ค้นหาชุดข้อมูล, หมวดหมู่, หรือคำอธิบาย..."
+              placeholder="ค้นหาชุดข้อมูล กลุ่มงาน หรือ Data Owner..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}

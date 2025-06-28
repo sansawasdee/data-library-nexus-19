@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const LibraryHeader = () => {
-  const [notifications] = useState(3);
+  const [notifications] = useState(8);
 
   return (
     <header className="bg-white border-b shadow-sm sticky top-0 z-50">
@@ -26,8 +26,8 @@ const LibraryHeader = () => {
               <Book className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">OpenLib Data Catalog</h1>
-              <p className="text-sm text-gray-500">ห้องสมุดข้อมูลดิจิทัล</p>
+              <h1 className="text-xl font-bold text-gray-900">Data Catalog สสจ.เชียงราย</h1>
+              <p className="text-sm text-gray-500">สำนักงานสาธารณสุขจังหวัดเชียงราย</p>
             </div>
           </div>
 
@@ -35,17 +35,17 @@ const LibraryHeader = () => {
           <nav className="hidden md:flex items-center space-x-6">
             <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
               <Database className="h-4 w-4 mr-2" />
-              ชุดข้อมูล
+              กลุ่มงาน
             </Button>
             <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
               <Search className="h-4 w-4 mr-2" />
-              ค้นหา
-            </Button>
-            <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
-              คำขอ
+              ค้นหาข้อมูล
             </Button>
             <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
               รายงาน
+            </Button>
+            <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
+              คู่มือ
             </Button>
           </nav>
 
@@ -73,7 +73,7 @@ const LibraryHeader = () => {
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="" />
                     <AvatarFallback className="bg-blue-100 text-blue-600">
-                      ผู
+                      DM
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -81,14 +81,15 @@ const LibraryHeader = () => {
               <DropdownMenuContent className="w-56 bg-white" align="end">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">ผู้ใช้งาน</p>
-                    <p className="text-xs text-gray-500">Data Owner</p>
+                    <p className="text-sm font-medium">Data Manager</p>
+                    <p className="text-xs text-gray-500">สสจ.เชียงราย</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>โปรไฟล์</DropdownMenuItem>
                 <DropdownMenuItem>การตั้งค่า</DropdownMenuItem>
                 <DropdownMenuItem>ประวัติการใช้งาน</DropdownMenuItem>
+                <DropdownMenuItem>คู่มือ Data Governance</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-600">
                   ออกจากระบบ
