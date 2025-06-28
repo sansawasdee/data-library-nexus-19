@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Bell, Book, Search, Database, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarContent, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,7 +71,7 @@ const LibraryHeader = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarContent src="" />
+                    <AvatarImage src="" />
                     <AvatarFallback className="bg-blue-100 text-blue-600">
                       ผู
                     </AvatarFallback>

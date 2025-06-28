@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { Search, Book, Database, Plus, Bell, Tree, Tag } from 'lucide-react';
+import { Search, Book, Database, Plus, Bell, TreePine, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarContent, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import LibraryHeader from '@/components/LibraryHeader';
 import CategoryShelf from '@/components/CategoryShelf';
 import DatasetCard from '@/components/DatasetCard';
@@ -34,8 +34,8 @@ const Index = () => {
       category: 'สถิติสุขภาพ',
       owner: 'กรุงเทพมหานคร',
       lastUpdated: '2024-01-15',
-      status: 'approved',
-      accessLevel: 'public'
+      status: 'approved' as const,
+      accessLevel: 'public' as const
     },
     {
       id: 2,
@@ -44,8 +44,8 @@ const Index = () => {
       category: 'งบประมาณ',
       owner: 'กระทรวงดิจิทัลฯ',
       lastUpdated: '2024-01-10',
-      status: 'pending',
-      accessLevel: 'internal'
+      status: 'pending' as const,
+      accessLevel: 'internal' as const
     },
     {
       id: 3,
@@ -54,8 +54,8 @@ const Index = () => {
       category: 'สิ่งแวดล้อม',
       owner: 'กรมควบคุมมลพิษ',
       lastUpdated: '2024-01-12',
-      status: 'approved',
-      accessLevel: 'public'
+      status: 'approved' as const,
+      accessLevel: 'public' as const
     }
   ];
 
@@ -92,7 +92,7 @@ const Index = () => {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <Tree className="h-6 w-6 mr-2 text-yellow-600" />
+              <TreePine className="h-6 w-6 mr-2 text-yellow-600" />
               หมวดหมู่ข้อมูล
             </h2>
             <Button variant="outline" size="sm">

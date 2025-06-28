@@ -1,5 +1,5 @@
 
-import { Database, Bell, Book, Tree } from 'lucide-react';
+import { Database, Bell, Book, TreePine } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const StatsOverview = () => {
@@ -15,7 +15,7 @@ const StatsOverview = () => {
     {
       title: 'หมวดหมู่',
       value: '24',
-      icon: Tree,
+      icon: TreePine,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
       change: '+2'
