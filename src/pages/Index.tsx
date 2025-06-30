@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Search, Book, Database, Plus, Bell, TreePine, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,8 +14,10 @@ import QuickSearch from '@/components/QuickSearch';
 import { useWorkGroups } from '@/hooks/useWorkGroups';
 import { useDatasets } from '@/hooks/useDatasets';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   
@@ -108,7 +111,11 @@ const Index = () => {
               <Badge variant="outline" className="text-sm">
                 รวม {workGroups?.length || 0} กลุ่มงาน
               </Badge>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/add-dataset')}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 เพิ่มชุดข้อมูล
               </Button>
@@ -139,7 +146,10 @@ const Index = () => {
               <Database className="h-6 w-6 mr-2 text-blue-600" />
               ชุดข้อมูลล่าสุด
             </h2>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => navigate('/add-dataset')}
+            >
               <Plus className="h-4 w-4 mr-2" />
               เพิ่มชุดข้อมูลใหม่
             </Button>
@@ -224,7 +234,11 @@ const Index = () => {
               <Bell className="h-6 w-6 mb-2" />
               <span className="text-sm">คำขอข้อมูล</span>
             </Button>
-            <Button variant="outline" className="h-16 flex flex-col items-center">
+            <Button 
+              variant="outline" 
+              className="h-16 flex flex-col items-center"
+              onClick={() => navigate('/add-dataset')}
+            >
               <Tag className="h-6 w-6 mb-2" />
               <span className="text-sm">จัดการ Metadata</span>
             </Button>
