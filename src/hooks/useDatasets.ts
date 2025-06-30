@@ -6,6 +6,7 @@ export const useDatasets = () => {
   return useQuery({
     queryKey: ['datasets'],
     queryFn: async () => {
+      console.log('Fetching datasets from Supabase...');
       const { data, error } = await supabase
         .from('datasets')
         .select(`
@@ -14,7 +15,12 @@ export const useDatasets = () => {
         `)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching datasets:', error);
+        throw error;
+      }
+      
+      console.log('Datasets fetched successfully:', data);
       return data;
     },
   });

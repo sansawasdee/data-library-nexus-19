@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 interface Dataset {
-  id: number;
+  id: string; // เปลี่ยนจาก number เป็น string เพื่อให้ตรงกับ UUID
   title: string;
   description: string;
   category: string;

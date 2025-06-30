@@ -29,9 +29,9 @@ const Index = () => {
     color: group.color || '#3B82F6'
   })) || [];
 
-  // Transform datasets data to match the expected format
+  // Transform datasets data to match the expected format - แก้ไข id type
   const recentDatasets = datasets?.slice(0, 6).map(dataset => ({
-    id: dataset.id,
+    id: dataset.id, // ใช้ string UUID แทน number
     title: dataset.title,
     description: dataset.description || '',
     category: dataset.work_groups?.name || 'ไม่ระบุ',
