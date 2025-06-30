@@ -9,7 +9,128 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      dataset_tags: {
+        Row: {
+          dataset_id: string
+          tag_id: string
+        }
+        Insert: {
+          dataset_id: string
+          tag_id: string
+        }
+        Update: {
+          dataset_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dataset_tags_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "datasets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dataset_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      datasets: {
+        Row: {
+          access_level: string
+          created_at: string
+          description: string | null
+          id: string
+          last_updated: string | null
+          owner: string
+          status: string
+          title: string
+          updated_at: string
+          work_group_id: string | null
+        }
+        Insert: {
+          access_level?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_updated?: string | null
+          owner: string
+          status?: string
+          title: string
+          updated_at?: string
+          work_group_id?: string | null
+        }
+        Update: {
+          access_level?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_updated?: string | null
+          owner?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          work_group_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "datasets_work_group_id_fkey"
+            columns: ["work_group_id"]
+            isOneToOne: false
+            referencedRelation: "work_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      work_groups: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

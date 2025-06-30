@@ -4,15 +4,12 @@ import { Search, Database, Tag } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useTags } from '@/hooks/useTags';
 
 const QuickSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
-  const popularTags = [
-    'DMFT', 'ร้านยา', 'KPI', 'UC', 'รายงาน 506', 
-    'แพทย์แผนไทย', 'บุคลากร', 'สิ่งแวดล้อม', 'NCD', 'HDC'
-  ];
+  const { data: tags, isLoading: tagsLoading } = useTags();
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -68,17 +65,21 @@ const QuickSearch = () => {
       <div className="text-center">
         <p className="text-blue-100 mb-3">แท็กยอดนิยม:</p>
         <div className="flex flex-wrap justify-center gap-2">
-          {popularTags.map((tag, index) => (
-            <Badge
-              key={index}
-              variant="secondary"
-              className="bg-white/20 text-white hover:bg-white/30 cursor-pointer transition-colors px-3 py-1"
-              onClick={() => setSearchQuery(tag)}
-            >
-              <Tag className="h-3 w-3 mr-1" />
-              {tag}
-            </Badge>
-          ))}
+          {tagsLoading ? (
+            <p className="text-blue-200">กำลังโหลดแท็ก...</p>
+          ) : (
+            tags?.map((tag) => (
+              <Badge
+                key={tag.id}
+                variant="secondary"
+                className="bg-white/20 text-white hover:bg-white/30 cursor-pointer transition-colors px-3 py-1"
+                onClick={() => setSearchQuery(tag.name)}
+              >
+                <Tag className="h-3 w-3 mr-1" />
+                {tag.name}
+              </Badge>
+            ))
+          )}
         </div>
       </div>
 

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Search, Book, Database, Plus, Bell, TreePine, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,96 +10,36 @@ import CategoryShelf from '@/components/CategoryShelf';
 import DatasetCard from '@/components/DatasetCard';
 import StatsOverview from '@/components/StatsOverview';
 import QuickSearch from '@/components/QuickSearch';
+import { useWorkGroups } from '@/hooks/useWorkGroups';
+import { useDatasets } from '@/hooks/useDatasets';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  const { data: workGroups, isLoading: workGroupsLoading } = useWorkGroups();
+  const { data: datasets, isLoading: datasetsLoading } = useDatasets();
 
-  // Work groups in Chiang Rai Provincial Health Office
-  const categories = [
-    { id: 'dental-health', name: 'ทันตสาธารณสุข', count: 8, color: 'bg-blue-500' },
-    { id: 'consumer-protection', name: 'คุ้มครองผู้บริโภคและเภสัชกรรม', count: 12, color: 'bg-green-500' },
-    { id: 'public-health-strategy', name: 'ยุทธศาสตร์สาธารณสุข', count: 15, color: 'bg-purple-500' },
-    { id: 'health-insurance', name: 'ประกันสุขภาพ', count: 18, color: 'bg-yellow-500' },
-    { id: 'legal-affairs', name: 'กฎหมาย', count: 6, color: 'bg-red-500' },
-    { id: 'communicable-disease', name: 'ควบคุมโรคติดต่อ', count: 22, color: 'bg-orange-500' },
-    { id: 'traditional-medicine', name: 'แพทย์แผนไทย', count: 9, color: 'bg-teal-500' },
-    { id: 'health-promotion', name: 'ส่งเสริมสุขภาพ', count: 16, color: 'bg-pink-500' },
-    { id: 'administration', name: 'บริหารทั่วไป', count: 14, color: 'bg-gray-500' },
-    { id: 'human-resources', name: 'บุคลากร', count: 11, color: 'bg-indigo-500' },
-    { id: 'environmental-health', name: 'อนามัยสิ่งแวดล้อม', count: 13, color: 'bg-emerald-500' },
-    { id: 'ncd', name: 'โรคไม่ติดต่อ', count: 19, color: 'bg-violet-500' },
-    { id: 'information-systems', name: 'สารนิเทศและอำนวยการ', count: 10, color: 'bg-cyan-500' },
-    { id: 'quality-development', name: 'พัฒนาคุณภาพและมาตรฐาน', count: 7, color: 'bg-lime-500' },
-    { id: 'primary-healthcare', name: 'สาธารณสุขมูลฐาน', count: 20, color: 'bg-amber-500' },
-    { id: 'digital-health', name: 'สุขภาพดิจิทัล', count: 8, color: 'bg-sky-500' },
-    { id: 'academic-affairs', name: 'วิชาการและแผนงาน', count: 12, color: 'bg-rose-500' },
-    { id: 'internal-audit', name: 'ตรวจสอบภายใน', count: 5, color: 'bg-slate-500' },
-    { id: 'drug-prevention', name: 'ยาเสพติดและสุขภาพจิต', count: 14, color: 'bg-fuchsia-500' }
-  ];
+  // Transform workGroups data to match the expected format
+  const categories = workGroups?.map(group => ({
+    id: group.id,
+    name: group.name,
+    count: datasets?.filter(d => d.work_group_id === group.id).length || 0,
+    color: group.color || '#3B82F6'
+  })) || [];
 
-  const recentDatasets = [
-    {
-      id: 1,
-      title: 'ข้อมูล DMFT เด็กนักเรียนจังหวัดเชียงราย 2567',
-      description: 'ข้อมูลสถิติฟันผุในเด็กนักเรียนและการตรวจสุขภาพช่องปาก',
-      category: 'ทันตสาธารณสุข',
-      owner: 'หัวหน้ากลุ่มงานทันตสาธารณสุข',
-      lastUpdated: '2024-01-15',
-      status: 'approved' as const,
-      accessLevel: 'internal' as const
-    },
-    {
-      id: 2,
-      title: 'รายงานตรวจร้านยาและสถานประกอบการ',
-      description: 'ข้อมูลการตรวจสอบร้านยาและสถานประกอบการด้านเภสัชกรรม',
-      category: 'คุ้มครองผู้บริโภคและเภสัชกรรม',
-      owner: 'หัวหน้ากลุ่มงานคุ้มครองผู้บริโภคฯ',
-      lastUpdated: '2024-01-12',
-      status: 'approved' as const,
-      accessLevel: 'public' as const
-    },
-    {
-      id: 3,
-      title: 'ตัวชี้วัด KPI สำนักงานสาธารณสุขจังหวัดเชียงราย',
-      description: 'ข้อมูลตัวชี้วัดผลการดำเนินงานของแต่ละกลุ่มงาน',
-      category: 'ยุทธศาสตร์สาธารณสุข',
-      owner: 'หัวหน้ากลุ่มงานยุทธศาสตร์สาธารณสุข',
-      lastUpdated: '2024-01-10',
-      status: 'pending' as const,
-      accessLevel: 'internal' as const
-    },
-    {
-      id: 4,
-      title: 'ข้อมูลเบิกจ่าย UC และการส่งแฟ้ม 43 แฟ้ม',
-      description: 'ข้อมูลการเบิกจ่ายประกันสุขภาพถ้วนหน้าและการรายงานข้อมูล',
-      category: 'ประกันสุขภาพ',
-      owner: 'หัวหน้ากลุ่มงานประกันสุขภาพ',
-      lastUpdated: '2024-01-08',
-      status: 'approved' as const,
-      accessLevel: 'confidential' as const
-    },
-    {
-      id: 5,
-      title: 'รายงาน 506 และ SRRT ควบคุมโรคติดต่อ',
-      description: 'ข้อมูลการเฝ้าระวังและควบคุมโรคติดต่อในพื้นที่จังหวัดเชียงราย',
-      category: 'ควบคุมโรคติดต่อ',
-      owner: 'หัวหน้ากลุ่มงานควบคุมโรคติดต่อ',
-      lastUpdated: '2024-01-14',
-      status: 'approved' as const,
-      accessLevel: 'internal' as const
-    },
-    {
-      id: 6,
-      title: 'ข้อมูลบุคลากรและการพัฒนาทรัพยากรบุคคล',
-      description: 'ข้อมูลข้าราชการ ลูกจ้าง การลา การบรรจุแต่งตั้ง',
-      category: 'บุคลากร',
-      owner: 'หัวหน้ากลุ่มงานบุคลากร',
-      lastUpdated: '2024-01-11',
-      status: 'approved' as const,
-      accessLevel: 'confidential' as const
-    }
-  ];
+  // Transform datasets data to match the expected format
+  const recentDatasets = datasets?.slice(0, 6).map(dataset => ({
+    id: dataset.id,
+    title: dataset.title,
+    description: dataset.description || '',
+    category: dataset.work_groups?.name || 'ไม่ระบุ',
+    owner: dataset.owner,
+    lastUpdated: dataset.last_updated || dataset.created_at?.split('T')[0] || '',
+    status: dataset.status as 'approved' | 'pending' | 'rejected',
+    accessLevel: dataset.access_level as 'public' | 'internal' | 'confidential'
+  })) || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -167,7 +106,7 @@ const Index = () => {
             </h2>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-sm">
-                รวม {categories.length} กลุ่มงาน
+                รวม {workGroups?.length || 0} กลุ่มงาน
               </Badge>
               <Button variant="outline" size="sm">
                 <Plus className="h-4 w-4 mr-2" />
@@ -177,13 +116,19 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {categories.map((category) => (
-              <CategoryShelf 
-                key={category.id} 
-                category={category}
-                onClick={() => setSelectedCategory(category.id)}
-              />
-            ))}
+            {workGroupsLoading ? (
+              Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="h-40 w-full" />
+              ))
+            ) : (
+              categories.map((category) => (
+                <CategoryShelf 
+                  key={category.id} 
+                  category={category}
+                  onClick={() => setSelectedCategory(category.id)}
+                />
+              ))
+            )}
           </div>
         </section>
 
@@ -201,9 +146,19 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {recentDatasets.map((dataset) => (
-              <DatasetCard key={dataset.id} dataset={dataset} />
-            ))}
+            {datasetsLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-64 w-full" />
+              ))
+            ) : recentDatasets.length > 0 ? (
+              recentDatasets.map((dataset) => (
+                <DatasetCard key={dataset.id} dataset={dataset} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-gray-500">ยังไม่มีชุดข้อมูล</p>
+              </div>
+            )}
           </div>
         </section>
 

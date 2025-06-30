@@ -1,12 +1,20 @@
 
 import { Database, Bell, Book, TreePine, Users, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useWorkGroups } from '@/hooks/useWorkGroups';
+import { useDatasets } from '@/hooks/useDatasets';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const StatsOverview = () => {
+  const { data: workGroups, isLoading: workGroupsLoading } = useWorkGroups();
+  const { data: datasets, isLoading: datasetsLoading } = useDatasets();
+
+  const pendingDatasets = datasets?.filter(d => d.status === 'pending').length || 0;
+
   const stats = [
     {
       title: 'กลุ่มงานทั้งหมด',
-      value: '19',
+      value: workGroupsLoading ? '...' : (workGroups?.length || 0).toString(),
       icon: TreePine,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
@@ -14,15 +22,15 @@ const StatsOverview = () => {
     },
     {
       title: 'ชุดข้อมูลทั้งหมด',
-      value: '247',
+      value: datasetsLoading ? '...' : (datasets?.length || 0).toString(),
       icon: Database,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
-      change: '+15 ชุด'
+      change: `${datasets?.length || 0} ชุด`
     },
     {
       title: 'Data Owner',
-      value: '19',
+      value: workGroupsLoading ? '...' : (workGroups?.length || 0).toString(),
       icon: Users,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
@@ -30,7 +38,7 @@ const StatsOverview = () => {
     },
     {
       title: 'รอการอนุมัติ',
-      value: '8',
+      value: datasetsLoading ? '...' : pendingDatasets.toString(),
       icon: Bell,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
@@ -51,9 +59,13 @@ const StatsOverview = () => {
                     {stat.title}
                   </p>
                   <div className="flex items-baseline">
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      {stat.value}
-                    </h3>
+                    {workGroupsLoading || datasetsLoading ? (
+                      <Skeleton className="h-8 w-12" />
+                    ) : (
+                      <h3 className="text-2xl font-bold text-gray-900">
+                        {stat.value}
+                      </h3>
+                    )}
                     <span className="text-sm text-gray-500 ml-2">
                       {stat.change}
                     </span>
