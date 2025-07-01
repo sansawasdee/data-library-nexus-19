@@ -42,36 +42,51 @@ export type Database = {
       datasets: {
         Row: {
           access_level: string
+          approval_notes: string | null
+          approved_at: string | null
+          approved_by: string | null
           created_at: string
           description: string | null
           id: string
           last_updated: string | null
           owner: string
           status: string
+          submission_notes: string | null
+          submitted_by: string | null
           title: string
           updated_at: string
           work_group_id: string | null
         }
         Insert: {
           access_level?: string
+          approval_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           description?: string | null
           id?: string
           last_updated?: string | null
           owner: string
           status?: string
+          submission_notes?: string | null
+          submitted_by?: string | null
           title: string
           updated_at?: string
           work_group_id?: string | null
         }
         Update: {
           access_level?: string
+          approval_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           description?: string | null
           id?: string
           last_updated?: string | null
           owner?: string
           status?: string
+          submission_notes?: string | null
+          submitted_by?: string | null
           title?: string
           updated_at?: string
           work_group_id?: string | null
@@ -79,6 +94,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "datasets_work_group_id_fkey"
+            columns: ["work_group_id"]
+            isOneToOne: false
+            referencedRelation: "work_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+          work_group_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+          work_group_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+          work_group_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_work_group_id_fkey"
             columns: ["work_group_id"]
             isOneToOne: false
             referencedRelation: "work_groups"
@@ -103,6 +150,38 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+          work_group_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+          work_group_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+          work_group_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_work_group_id_fkey"
+            columns: ["work_group_id"]
+            isOneToOne: false
+            referencedRelation: "work_groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       work_groups: {
         Row: {
@@ -136,10 +215,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["user_role"]
+          _work_group_id?: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "admin" | "work_group_leader" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -254,6 +340,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["admin", "work_group_leader", "user"],
+    },
   },
 } as const

@@ -14,13 +14,16 @@ import {
 } from '@/components/ui/select';
 import { useWorkGroups } from '@/hooks/useWorkGroups';
 import { useCreateDataset } from '@/hooks/useCreateDataset';
-import { Database, ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Database, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AddDatasetForm = () => {
   const navigate = useNavigate();
   const { data: workGroups, isLoading: workGroupsLoading } = useWorkGroups();
   const createDataset = useCreateDataset();
+  const { user, hasRole, loading: authLoading } = useAuth();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -29,6 +32,27 @@ const AddDatasetForm = () => {
     work_group_id: '',
     access_level: 'internal' as 'public' | 'internal' | 'confidential'
   });
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>กำลังตรวจสอบสิทธิ์...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to auth if not logged in
+  if (!user) {
+    navigate('/auth');
+    return null;
+  }
+
+  // Check if user has permission to add datasets
+  const canAddDataset = hasRole('admin') || hasRole('work_group_leader');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,8 +97,17 @@ const AddDatasetForm = () => {
             </div>
             <h1 className="text-3xl font-bold text-gray-900">เพิ่มชุดข้อมูลใหม่</h1>
           </div>
-          <p className="text-gray-600">กรอกข้อมูลเพื่อเพิ่มชุดข้อมูลใหม่เข้าสู่ระบบ Data Catalog</p>
+          <p className="text-gray-600">กรอกข้อมูลเพื่อส่งชุดข้อมูลใหม่เพื่อขออนุมัติจากผู้ดูแลระบบ</p>
         </div>
+
+        {!canAddDataset && (
+          <Alert className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              คุณไม่มีสิทธิ์ในการเพิ่มชุดข้อมูล เฉพาะหัวหน้ากลุ่มงานและผู้ดูแลระบบเท่านั้นที่สามารถเพิ่มชุดข้อมูลได้
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card>
           <CardHeader>
@@ -90,6 +123,7 @@ const AddDatasetForm = () => {
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="ระบุชื่อชุดข้อมูล"
                   required
+                  disabled={!canAddDataset}
                 />
               </div>
 
@@ -101,6 +135,7 @@ const AddDatasetForm = () => {
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   placeholder="อธิบายรายละเอียดของชุดข้อมูล"
                   rows={4}
+                  disabled={!canAddDataset}
                 />
               </div>
 
@@ -112,6 +147,7 @@ const AddDatasetForm = () => {
                   onChange={(e) => handleInputChange('owner', e.target.value)}
                   placeholder="ชื่อเจ้าของหรือผู้รับผิดชอบข้อมูล"
                   required
+                  disabled={!canAddDataset}
                 />
               </div>
 
@@ -120,6 +156,7 @@ const AddDatasetForm = () => {
                 <Select
                   value={formData.work_group_id}
                   onValueChange={(value) => handleInputChange('work_group_id', value)}
+                  disabled={!canAddDataset}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="เลือกกลุ่มงาน" />
@@ -143,6 +180,7 @@ const AddDatasetForm = () => {
                 <Select
                   value={formData.access_level}
                   onValueChange={(value) => handleInputChange('access_level', value as 'public' | 'internal' | 'confidential')}
+                  disabled={!canAddDataset}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -166,10 +204,10 @@ const AddDatasetForm = () => {
                 </Button>
                 <Button
                   type="submit"
-                  disabled={createDataset.isPending || !formData.title || !formData.owner || !formData.work_group_id}
+                  disabled={!canAddDataset || createDataset.isPending || !formData.title || !formData.owner || !formData.work_group_id}
                   className="flex-1 bg-blue-600 hover:bg-blue-700"
                 >
-                  {createDataset.isPending ? 'กำลังเพิ่ม...' : 'เพิ่มชุดข้อมูล'}
+                  {createDataset.isPending ? 'กำลังส่ง...' : 'ส่งเพื่อขออนุมัติ'}
                 </Button>
               </div>
             </form>

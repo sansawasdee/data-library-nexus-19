@@ -9,6 +9,7 @@ interface CreateDatasetData {
   owner: string;
   work_group_id: string;
   access_level: 'public' | 'internal' | 'confidential';
+  submitted_by?: string;
 }
 
 export const useCreateDataset = () => {
@@ -18,9 +19,19 @@ export const useCreateDataset = () => {
   return useMutation({
     mutationFn: async (data: CreateDatasetData) => {
       console.log('Creating new dataset:', data);
+      
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const datasetData = {
+        ...data,
+        submitted_by: user?.id,
+        status: 'submitted' // Set status to submitted when created by work group leader
+      };
+      
       const { data: result, error } = await supabase
         .from('datasets')
-        .insert([data])
+        .insert([datasetData])
         .select()
         .single();
 
@@ -36,14 +47,14 @@ export const useCreateDataset = () => {
       queryClient.invalidateQueries({ queryKey: ['datasets'] });
       toast({
         title: "สำเร็จ",
-        description: "เพิ่มชุดข้อมูลใหม่เรียบร้อยแล้ว",
+        description: "ส่งชุดข้อมูลเพื่อขออนุมัติเรียบร้อยแล้ว",
       });
     },
     onError: (error) => {
       console.error('Failed to create dataset:', error);
       toast({
         title: "เกิดข้อผิดพลาด",
-        description: "ไม่สามารถเพิ่มชุดข้อมูลได้",
+        description: "ไม่สามารถส่งชุดข้อมูลได้ กรุณาตรวจสอบสิทธิ์การเข้าถึง",
         variant: "destructive",
       });
     },
