@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import AddDataset from "./pages/AddDataset";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
+import UserManagement from "./pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/add-dataset" element={<AddDataset />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<UserManagement />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

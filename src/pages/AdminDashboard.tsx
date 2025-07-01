@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useDatasets } from '@/hooks/useDatasets';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, CheckCircle, XCircle, Clock, Shield } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Clock, Shield, Users } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -116,13 +115,25 @@ const AdminDashboard = () => {
             กลับหน้าหลัก
           </Button>
           
-          <div className="flex items-center mb-2">
-            <div className="bg-red-100 p-3 rounded-full mr-4">
-              <Shield className="h-6 w-6 text-red-600" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center">
+              <div className="bg-red-100 p-3 rounded-full mr-4">
+                <Shield className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">หน้าควบคุมผู้ดูแลระบบ</h1>
+                <p className="text-gray-600">จัดการและอนุมัติชุดข้อมูลที่ส่งมาจากหัวหน้ากลุ่มงาน</p>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">หน้าควบคุมผู้ดูแลระบบ</h1>
+            
+            <Button
+              onClick={() => navigate('/admin/users')}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Users className="h-4 w-4 mr-2" />
+              จัดการผู้ใช้งาน
+            </Button>
           </div>
-          <p className="text-gray-600">จัดการและอนุมัติชุดข้อมูลที่ส่งมาจากหัวหน้ากลุ่มงาน</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
